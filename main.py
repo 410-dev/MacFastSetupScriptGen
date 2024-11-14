@@ -200,6 +200,12 @@ def generate_bash_script():
         length = len(post_run_script)
         print(f"\nTotal {length} lines of post run script setup.")
         
+    print()
+
+    refresh = ""
+    while refresh not in ["y", "n"]:
+        refresh = input(f"Do you want the script to refresh the Dock and Finder after script is done? (y/n) ")
+        refresh = refresh.lower()
     
     # Compile the bash script
     bash_script = """#!/bin/bash
@@ -207,6 +213,7 @@ def generate_bash_script():
 # Step 1: Install Homebrew
 echo "[1/5] Installing Homebrew..."
 /bin/bash -c \"$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)\"
+eval "$(/opt/homebrew/bin/brew shellenv)"
 
 # Step 2: Install Homebrew non-cask packages
 echo "[2/5] Installing Homebrew non-cask packages..."
@@ -234,6 +241,9 @@ brew install """ + " ".join(selected_packages) + "\n"
     if post_run_script:
         for line in post_run_script:
             bash_script += f"{line}\n"
+
+    if refresh == "y":
+        bash_script += f"killall Dock Finder\n"
 
     # Complete configuration message
     bash_script += "\necho 'Configuration complete.'"
