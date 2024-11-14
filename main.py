@@ -62,7 +62,7 @@ def check_homebrew_casks(app_names):
     return found_apps, not_found_apps
 
 def get_homebrew_packages():
-    result = subprocess.run(["brew", "list"], capture_output=True, text=True)
+    result = subprocess.run(["brew", "list", "--formulae"], capture_output=True, text=True)
     if result.returncode != 0:
         print("Error: Unable to list Homebrew packages.")
         return []
@@ -252,7 +252,7 @@ brew install """ + " ".join(selected_packages) + "\n"
     elif refresh == "r":
         bash_script += f"echo Configuration complete, restarting system.\nsudo reboot\n"
     elif refresh == "u":
-        bash_script += f"echo Restarting userspace...\nsudo launchctl restart userspace\n"
+        bash_script += f"echo Restarting userspace...\nsudo launchctl reboot userspace\n"
 
     # Complete configuration message
     bash_script += "\necho 'Configuration complete.'"
