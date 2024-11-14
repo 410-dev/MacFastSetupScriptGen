@@ -1,4 +1,4 @@
-# Bash Script Generator Documentation
+# MacFastSetupScript Generator
 
 ## Overview
 
