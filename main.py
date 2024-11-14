@@ -203,8 +203,13 @@ def generate_bash_script():
     print()
 
     refresh = ""
-    while refresh not in ["y", "n"]:
-        refresh = input(f"Do you want the script to refresh the Dock and Finder after script is done? (y/n) ")
+    print(f"Select the refresh method.")
+    print(f"    [d] Restart Dock and Finder")
+    print(f"    [r] Restart System (Requires root during script execution)")
+    print(f"    [u] Restart Userspace")
+    print(f"    [x] Don't refresh")
+    while refresh not in ["d", "r", "u", "x"]:
+        refresh = input(f"Select the refresh method: ")
         refresh = refresh.lower()
     
     # Compile the bash script
@@ -242,8 +247,12 @@ brew install """ + " ".join(selected_packages) + "\n"
         for line in post_run_script:
             bash_script += f"{line}\n"
 
-    if refresh == "y":
-        bash_script += f"killall Dock Finder\n"
+    if refresh == "d":
+        bash_script += f"echo Restarting Dock and Finder...\nkillall Dock Finder\n"
+    elif refresh == "r":
+        bash_script += f"echo Configuration complete, restarting system.\nsudo reboot\n"
+    elif refresh == "u":
+        bash_script += f"echo Restarting userspace...\nsudo launchctl restart userspace\n"
 
     # Complete configuration message
     bash_script += "\necho 'Configuration complete.'"
